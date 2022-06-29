@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import { el } from './elements'
 
 class Toast {
@@ -10,4 +12,5 @@ class Toast {
     }
 
 }
+
 export default new Toast()

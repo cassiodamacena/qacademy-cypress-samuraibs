@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import { el } from './elements'
 import toast from '../../components/toast'
 
@@ -27,4 +29,5 @@ class SigupPage {
     }
 
 }
+
 export default new SigupPage()

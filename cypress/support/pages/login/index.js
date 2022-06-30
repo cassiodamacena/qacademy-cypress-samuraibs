@@ -10,16 +10,20 @@ class LoginPage {
     }
 
     go() {
-        cy.visit('')
+        cy.visit('/')
     }
 
     form(user) {
-        cy.get(el.email).type(user.email)
-        cy.get(el.senha).type(user.password)
+        cy.get(el.email).clear().type(user.email)
+        cy.get(el.senha).clear().type(user.password)
     }
 
     submit(){
         cy.contains(el.submitLogin).click()
+    }
+
+    alertHaveText(expectedMessage){
+        cy.contains(el.alertError, expectedMessage).should('be.visible')
     }
 
 }

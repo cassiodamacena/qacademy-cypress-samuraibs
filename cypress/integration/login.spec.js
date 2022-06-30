@@ -3,7 +3,7 @@
 import loginPage from '../support/pages/login'
 import dashPage from '../support/pages/dash'
 
-describe('Login', function () {
+describe('Dado que desejo realizar o login', function () {
 
     context('Quando o usuário é muito bom', function () {
 
@@ -51,6 +51,40 @@ describe('Login', function () {
             const expectedMessage = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
 
             loginPage.toast.shouldHaveText(expectedMessage)
+        })
+
+    })
+
+    context('Quando o formato do email é inválido', function(){
+
+        const emails = [
+            'cassio@gmail.',
+            'cassio@',
+            'cassio.com.br',
+            'cassio.com',
+            '@gmail.com',
+            '@gmail',
+            'abcd',
+            '1234',
+            'cassio$gmail.com.br',
+            'cassio&gmail.com.br'
+        ]
+
+        before(function(){
+            loginPage.go()
+        })
+
+        emails.forEach(function(email){
+            it('Deve validar login inválido com o e-amil: ' + email, function(){
+                const user = {
+                    email: email,
+                    password: 'pwd123'
+                }
+                loginPage.form(user)
+                loginPage.submit()
+
+                loginPage.alertHaveText('Informe um email válido')
+            })
         })
 
     })

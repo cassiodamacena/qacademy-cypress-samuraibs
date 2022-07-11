@@ -89,4 +89,29 @@ describe('Dado que desejo realizar o login', function () {
 
     })
 
+
+    context.only('Quando não informados os campos obrigatórios', function () {
+        
+        before(function () {
+            loginPage.go()
+            loginPage.submit()
+
+        })
+
+        const alertMessages = [
+            'E-mail é obrigatório',
+            'Senha é obrigatória'
+        ]
+
+        alertMessages.forEach(function(alert){
+            it('Então deve validar: ' + alert , function () {
+                loginPage.alertHaveText(alert)
+            })
+        })
+
+        
+    })
+
+    
+
 })

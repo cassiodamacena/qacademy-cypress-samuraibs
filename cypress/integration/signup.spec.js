@@ -91,7 +91,7 @@ describe('Dado que estou realizando o cadastro', function () {
             singnupPage.form(user)
             singnupPage.submit()
 
-            singnupPage.alertHaveText('Informe um email válido')
+            singnupPage.alert.haveText('Informe um email válido')
         })
     })
 
@@ -117,7 +117,7 @@ describe('Dado que estou realizando o cadastro', function () {
         })
 
         afterEach(function () {
-            singnupPage.alertHaveText('Pelo menos 6 caracteres')
+            singnupPage.alert.haveText('Pelo menos 6 caracteres')
         })
     })
 
@@ -143,7 +143,7 @@ describe('Dado que estou realizando o cadastro', function () {
 
         alertMessages.forEach(function(alert){
             it('Então deve validar: ' + alert , function () {
-                singnupPage.alertHaveText(alert)
+                singnupPage.alert.haveText(alert)
             })
         })
 

@@ -83,14 +83,14 @@ describe('Dado que desejo realizar o login', function () {
                 loginPage.form(user)
                 loginPage.submit()
 
-                loginPage.alertHaveText('Informe um email válido')
+                loginPage.alert.haveText('Informe um email válido')
             })
         })
 
     })
 
 
-    context.only('Quando não informados os campos obrigatórios', function () {
+    context('Quando não informados os campos obrigatórios', function () {
         
         before(function () {
             loginPage.go()
@@ -105,7 +105,7 @@ describe('Dado que desejo realizar o login', function () {
 
         alertMessages.forEach(function(alert){
             it('Então deve validar: ' + alert , function () {
-                loginPage.alertHaveText(alert)
+                loginPage.alert.haveText(alert)
             })
         })
 

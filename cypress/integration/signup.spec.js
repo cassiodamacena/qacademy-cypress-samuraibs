@@ -5,19 +5,23 @@ import singnupPage from '../support/pages/signup'
 
 describe('Dado que estou realizando o cadastro', function () {
 
-    context('Quando se tratar de um novo e-mail', function () {
-        const user = {
-            name: 'Cassio Damacena',
-            email: 'cassio@barbershop.com',
-            password: '123456'
-        }
+    beforeEach(function(){
+        cy.fixture('signup').then(function(signup){
+            this.sucesso = signup.sucesso
+            this.emailDuplicado = signup.emailDuplicado
+            this.emailInvalido = signup.emailInvalido
+            this.senhaInvalida = signup.senhaInvalida
+        })
+    })
 
+    context('Quando se tratar de um novo e-mail', function () {
+    
         it('Então deve cadastrar um novo usuário (utilizando faker)', function () {
 
-            user.email = faker.internet.email()
+            this.sucesso.email = faker.internet.email()
 
             singnupPage.go()
-            singnupPage.form(user)
+            singnupPage.form(this.sucesso)
             singnupPage.submit()
             singnupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
 
@@ -31,7 +35,7 @@ describe('Dado que estou realizando o cadastro', function () {
         it('Então deve cadastrar um novo usuário (massa fixa "intercept")', function () {
 
             singnupPage.go()
-            singnupPage.form(user)
+            singnupPage.form(this.sucesso)
 
             cy.intercept('POST', '/users', {
                 statusCode: 200
@@ -47,48 +51,37 @@ describe('Dado que estou realizando o cadastro', function () {
 
         it('Então deve cadastrar um novo usuário (massa fixa "limpando banco")', function () {
 
-            cy.task('removeUser', user.email)
+            cy.task('removeUser', this.sucesso.email)
                 .then(function (result) {
                     console.log(result)
                 })
 
             singnupPage.go()
-            singnupPage.form(user)
+            singnupPage.form(this.sucesso)
             singnupPage.submit()
             singnupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
         })
     })
 
     context('Quando o e-mail já existir', function () {
-        const user = {
-            name: 'Cassio Damacena Duplicado',
-            email: 'cassiodamacena@barbershop.com',
-            password: '123456',
-            is_provider: true
-        }
 
         before(function () {
-            cy.postUser(user)
+            cy.postUser(this.emailDuplicado)
         })
 
         it('Então deve validar email duplicado"', function () {
             singnupPage.go()
-            singnupPage.form(user)
+            singnupPage.form(this.emailDuplicado)
             singnupPage.submit()
             singnupPage.toast.shouldHaveText('Email já cadastrado para outro usuário.')
         })
     })
 
     context('Quando o e-mail é inválido', function () {
-        const user = {
-            name: 'Elisabeth',
-            email: 'elisabet.barbershop.com',
-            password: '123456',
-            is_provider: true
-        }
+        
         it('Então deve validar email inválido', function () {
             singnupPage.go()
-            singnupPage.form(user)
+            singnupPage.form(this.emailInvalido)
             singnupPage.submit()
 
             singnupPage.alert.haveText('Informe um email válido')
@@ -96,12 +89,7 @@ describe('Dado que estou realizando o cadastro', function () {
     })
 
     context('Quando a senha é menor que 6 caracteres', function () {
-        const user = {
-            name: 'Jason',
-            email: 'jason@barbershop.com',
-            password: '1',
-            is_provider: true
-        }
+    
         beforeEach(function () {
             singnupPage.go()
         })
@@ -110,8 +98,10 @@ describe('Dado que estou realizando o cadastro', function () {
 
         passwords.forEach(function (pass) {
             it('Então deve validar senha inválido: ' + pass + ' caracteres', function () {
-                user.password = pass
-                singnupPage.form(user)
+
+                this.senhaInvalida.password = pass
+
+                singnupPage.form(this.senhaInvalida)
                 singnupPage.submit()
             })
         })
@@ -122,12 +112,6 @@ describe('Dado que estou realizando o cadastro', function () {
     })
 
     context('Quando não informados os campos obrigatórios', function () {
-        const user = {
-            name: 'Elisabeth',
-            email: 'elisabet.barbershop.com',
-            password: '123456',
-            is_provider: true
-        }
 
         before(function () {
             singnupPage.go()

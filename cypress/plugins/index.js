@@ -26,6 +26,7 @@ module.exports = (on, config) => {
   const pool = new Pool(configJson.dbConfig)
 
   on('task', {
+    
     removeUser(email) {
       return new Promise(function (resolve) {
         pool.query('DELETE FROM public.users WHERE email = $1', [email], function (error, result) {
@@ -35,10 +36,24 @@ module.exports = (on, config) => {
           resolve({ success: result })
         })
       })
+    },
+
+    findToken(email) {
+      return new Promise(function (resolve) {
+        pool.query('select T.token from public.users U ' +
+          'inner join public.user_tokens T ' +
+          'on U.id = T.user_id ' +
+          'where U.email = $1 ' +
+          'order by T.created_at ', [email], function (error, result) {
+            if (error) {
+              throw error
+            }
+            resolve({ token: result.rows[0].token })
+          })
+      })
     }
+
   })
-
-
 }
 
 

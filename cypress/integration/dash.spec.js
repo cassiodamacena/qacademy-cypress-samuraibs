@@ -27,7 +27,7 @@ describe('Dado que desejo validar o dashboard', function () {
             cy.loginApp(provider, true)
 
             dashPage.calendarShouldBeVisible()
-            dashPage.selectDay(Cypress.env('appointmentDay'))
+            dashPage.selectDay(Cypress.env('appointmentDate'))
             dashPage.appointmentShouldBeVisible(client, appointment.hour)
 
         })

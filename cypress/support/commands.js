@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import loginPage from './pages/login'
+import dashPage from './pages/dash'
 import moment from 'moment'
 import { apiServer } from '../../cypress.json'
 
@@ -98,4 +100,11 @@ Cypress.Commands.add('createAppointment', function (hour) {
         expect(response.status).to.eq(200)
     })
 
+})
+
+Cypress.Commands.add('uiLogin', function (provider) {
+    loginPage.go()
+    loginPage.form(provider)
+    loginPage.submit()
+    dashPage.header.userLoggedIn(provider.name)
 })

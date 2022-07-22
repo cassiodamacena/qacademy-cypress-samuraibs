@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-import loginPage from '../support/pages/login'
 import dashPage from '../support/pages/dash'
 import {client, provider, appointment} from '../support/factories/dash'
 
@@ -24,9 +23,7 @@ describe('Dado que desejo validar o dashboard', function () {
             cy.log('Token :' + Cypress.env('loginAppClient'))
             cy.log('Id Ramom: ' + Cypress.env('providerId'))
 
-            loginPage.go()
-            loginPage.form(provider)
-            loginPage.submit()
+            cy.uiLogin(provider)
 
             dashPage.calendarShouldBeVisible()
             dashPage.selectDay(Cypress.env('appointmentDay'))

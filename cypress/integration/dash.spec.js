@@ -23,7 +23,8 @@ describe('Dado que desejo validar o dashboard', function () {
             cy.log('Token :' + Cypress.env('loginAppClient'))
             cy.log('Id Ramom: ' + Cypress.env('providerId'))
 
-            cy.uiLogin(provider)
+            //cy.uiLogin(provider)
+            cy.loginApp(provider, true)
 
             dashPage.calendarShouldBeVisible()
             dashPage.selectDay(Cypress.env('appointmentDay'))

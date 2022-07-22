@@ -38,7 +38,7 @@ Cypress.Commands.add('recoveryPass', function (email) {
 })
 
 
-Cypress.Commands.add('loginApp', function (user) {
+Cypress.Commands.add('loginApp', function (user, setLocalStorage = false) {
 
     const payload = {
         email: user.email,
@@ -52,7 +52,16 @@ Cypress.Commands.add('loginApp', function (user) {
     }).then(function (response) {
         expect(response.status).to.eq(200)
         Cypress.env('loginAppClient', response.body.token)
+
+        if (setLocalStorage = true) {
+            const { token, user } = response.body
+
+            window.localStorage.setItem('@Samurai:token', token)
+            window.localStorage.setItem('@Samurai:user', JSON.stringify(user))
+        }
+
     })
+    if (setLocalStorage = true) cy.visit('/dashboard')
 
 })
 

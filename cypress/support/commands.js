@@ -1,30 +1,6 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import moment from 'moment'
 
 Cypress.Commands.add('postUser', function (user) {
     cy.task('removeUser', user.email)
@@ -56,4 +32,69 @@ Cypress.Commands.add('recoveryPass', function (email) {
         .then(function (result) {
             Cypress.env('recoveryToken', result.token)
         })
+})
+
+
+Cypress.Commands.add('loginApp', function (user) {
+
+    const payload = {
+        email: user.email,
+        password: user.password
+    }
+
+    cy.request({
+        method: 'POST',
+        url: 'http://localhost:3333/sessions',
+        body: payload
+    }).then(function (response) {
+        expect(response.status).to.eq(200)
+        Cypress.env('loginAppClient', response.body.token)
+    })
+
+})
+
+Cypress.Commands.add('setProviderId', function (providerEmail) {
+    cy.request({
+        method: 'GET',
+        url: 'http://localhost:3333/providers',
+        headers: {
+            authorization: 'Bearer ' + Cypress.env('loginAppClient')
+        }
+    }).then(function (response) {
+        expect(response.status).to.eq(200)
+
+        const listProvider = response.body
+
+        listProvider.forEach(function (provider) {
+            if (provider.email === providerEmail) {
+                Cypress.env('providerId', provider.id)
+            }
+        });
+    })
+})
+
+Cypress.Commands.add('createAppointment', function (hour) {
+
+    let now = new Date()
+    now.setDate(now.getDate() + 3)
+    Cypress.env('appointmentDay', now.getDate())
+
+    const date = moment(now).format('YYYY-MM-DD ' + hour + ':00')
+
+    const payload = {
+        provider_id: Cypress.env('providerId'),
+        date: date
+    }
+
+    cy.request({
+        method: 'POST',
+        url: 'http://localhost:3333/appointments',
+        headers: {
+            authorization: 'Bearer ' + Cypress.env('loginAppClient')
+        },
+        body: payload
+    }).then(function (response) {
+        expect(response.status).to.eq(200)
+    })
+
 })

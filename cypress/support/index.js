@@ -18,3 +18,9 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+
+// Gerar screenshot no final de todos os testes (passando ou falhando)
+// afterEach(function(){
+//     cy.screenshot()
+// })

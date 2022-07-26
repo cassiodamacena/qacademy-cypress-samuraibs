@@ -11,6 +11,7 @@ class ForgotPasswordPage{
 
     go(){
         cy.visit('/forgot-password')
+        cy.contains(el.title).should('be.visible')
     }
 
     form(user) {

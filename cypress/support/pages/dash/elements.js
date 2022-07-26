@@ -1,4 +1,5 @@
 exports.el = {
+    title: ('h1', 'Horários agendados'),
     calendar: '.DayPicker',
     boxDay: '.DayPicker-Day--available',
     boxHour: 'span.appointment',
